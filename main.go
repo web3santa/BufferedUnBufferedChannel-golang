@@ -1,54 +1,47 @@
 package main
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
-type Student struct {
-	name   string
-	grades []int
-	age    int
-}
-
-// func (s *Student) setAge(age int) {
-// 	s.age = age
-// }
-
-func (s *Student) getAverageGrade() float32 {
-	sum := 0
-
-	for _, v := range s.grades {
-		sum += v
-	}
-	return float32(sum) / float32(len(s.grades))
-}
-
-func (s *Student) getMaxGrade() int {
-	sum := 0
-
-	for _, v := range s.grades {
-		if sum < v {
-			sum = v
-		}
-	}
-
-	return sum
+type course struct {
+	Name string `json:"name"`
+	Age  int    `json:"age"`
+	City string `json:"city"`
 }
 
 func main() {
-	st := Student{"Time", []int{70, 50, 20, 15}, 18}
-	s2 := Student{"Joe", []int{70, 50, 20, 15, 99, 43, 34}, 18}
-	max1 := st.getMaxGrade()
-	max2 := s2.getMaxGrade()
-	fmt.Println(max1)
-	fmt.Println(max2)
-	fmt.Println(st.grades)
-	st.grades = append(st.grades, 40, 99, 22)
-	fmt.Println(st.grades)
+	// DecodeJson()
+	EncodeJson()
+}
 
-	st.grades = append(st.grades, 234234, 123123, 123123)
-	fmt.Println(st.grades)
+func EncodeJson() {
+	var mar course
+	st, err := json.Marshal(&mar)
+	if err != nil {
+		fmt.Println(err)
+	}
 
-	indexToRemove := 1
-	st.grades = append(st.grades[:indexToRemove], st.grades[indexToRemove+1:]...)
-	fmt.Println(st.grades)
+	fmt.Println(st)
 
+	json.Unmarshal(st, &mar)
+	fmt.Printf("%#v\n", mar)
+}
+
+func DecodeJson() {
+	jsonDataFromWeb := []byte(`
+	{
+			"name": "Alice",
+			"age": 30,
+			"city": "New York"
+	  }
+	`)
+	var myOnlineData map[string]interface{}
+	json.Unmarshal(jsonDataFromWeb, &myOnlineData)
+	fmt.Printf("%#v\n", myOnlineData)
+
+	for k, v := range myOnlineData {
+		fmt.Printf("Key is %v and vlaue is %v and type of %T\n", k, v, v)
+	}
 }
